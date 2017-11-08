@@ -1909,29 +1909,20 @@ namespace sodium {
      * its own transaction so that state is updated separately for each frame.
      */
     template <typename A> stream<A> split(const stream<std::list<A>>& e) {
-        SODIUM_TUPLE<impl::stream_, SODIUM_SHARED_PTR<impl::node>> p =
-            impl::unsafe_new_stream();
-        transaction trans1;
-        auto kill = e.listen_raw(
-            trans1.impl(), std::get<1>(p),
-            new std::function<void(const SODIUM_SHARED_PTR<impl::node>&,
-                                   impl::transaction_impl*, const light_ptr&)>(
-                [](const SODIUM_SHARED_PTR<impl::node>& target,
-                   impl::transaction_impl* trans2, const light_ptr& ptr) {
-                    const std::list<A>& la = *ptr.cast_ptr<std::list<A>>(NULL);
-                    trans2->part->post([la, target]() {
-                        for (auto it = la.begin(); it != la.end(); ++it) {
-                            transaction trans3;
-                            send(target, trans3.impl(),
-                                 light_ptr::create<A>(*it));
-                            trans3.close();
-                        }
-                    });
-                }),
-            false);
-        stream<A> sa = SODIUM_TUPLE_GET<0>(p).unsafe_add_cleanup(kill);
-        trans1.close();
-        return sa;
+        impl::stream_sink_impl impl;
+        stream<A> s(impl.construct());
+        auto kill = e.listen([impl] (const std::list<A>& la) {
+            transaction trans1;
+            trans1.post([impl, la] () {
+                for (auto it = la.begin(); it != la.end(); ++it) {
+                    transaction trans2;
+                    impl.send(trans2.impl(), light_ptr::create<A>(*it));
+                    trans2.close();
+                }
+            });
+            trans1.close();
+        });
+        return s.add_cleanup(kill);
     }
 
     // New type names:
