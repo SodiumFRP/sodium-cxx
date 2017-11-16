@@ -18,6 +18,7 @@ else()
     endif()
 endif()
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wno-deprecated-declarations" )
 
 set( SODIUM_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sodium )
 
@@ -25,14 +26,24 @@ set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
 find_package( Boost REQUIRED )
 
-file( GLOB_RECURSE 
-    SODIUM_INCLUDE_FILES 
-    ${SODIUM_BASE_DIR}/*.h
+set(SODIUM_INCLUDE_FILES
+    ${SODIUM_BASE_DIR}/config.h
+    ${SODIUM_BASE_DIR}/count_set.h
+    ${SODIUM_BASE_DIR}/light_ptr.h
+    ${SODIUM_BASE_DIR}/lock_pool.h
+    ${SODIUM_BASE_DIR}/promise.h
+    ${SODIUM_BASE_DIR}/router.h
+    ${SODIUM_BASE_DIR}/sodium.h
+    ${SODIUM_BASE_DIR}/time.h
+    ${SODIUM_BASE_DIR}/transaction.h
+    ${SODIUM_BASE_DIR}/unit.h
     )
 
-file( GLOB_RECURSE 
-    SODIUM_SOURCE_FILES
-    ${SODIUM_BASE_DIR}/*.cpp
+set(SODIUM_SOURCE_FILES
+    ${SODIUM_BASE_DIR}/light_ptr.cpp
+    ${SODIUM_BASE_DIR}/lock_pool.cpp
+    ${SODIUM_BASE_DIR}/time.cpp
+    ${SODIUM_BASE_DIR}/transaction.cpp
     )
 
 file(
@@ -40,7 +51,7 @@ file(
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include/sodium
     )
 
-include_directories( ${Boost_INCLUDE_DIR} )
+include_directories( ${CMAKE_SOURCE_DIR} ${Boost_INCLUDE_DIR} )
 
 set( ALL_SOURCES ${SODIUM_INCLUDE_FILES} ${SODIUM_SOURCE_FILES} )
 
@@ -48,6 +59,11 @@ add_library( sodium SHARED ${ALL_SOURCES} )
 add_library( libsodium STATIC ${ALL_SOURCES} )
 
 set_target_properties( libsodium PROPERTIES OUTPUT_NAME sodium )
+
+# Testing
+
+enable_testing()
+add_subdirectory(tests)
 
 # INSTALL
 # -------

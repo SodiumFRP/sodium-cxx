@@ -911,7 +911,6 @@ void test_sodium::detach_sink()
 void test_sodium::move_semantics()
 {
     cell<unique_ptr<int>> pointer(unique_ptr<int>(new int(625)));
-    int v = 0;
     auto value = pointer.map([&](const unique_ptr<int>& pInt) {
         return pInt ? *pInt : 0;
     });
@@ -1129,11 +1128,9 @@ void test_sodium::router_loop1()
 
 int main(int argc, char* argv[])
 {
-    for (int i = 0; i < 1; i++) {
-        CppUnit::TextUi::TestRunner runner;
-        runner.addTest( test_sodium::suite() );
-        runner.run();
-    }
-    return 0;
+    CppUnit::TextUi::TestRunner runner;
+    runner.addTest( test_sodium::suite() );
+    bool success = runner.run();
+    return success ? 0 : 1;
 }
 

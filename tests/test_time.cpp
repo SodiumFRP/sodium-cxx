@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
     kill3();
     for (auto it = out.begin(); it != out.end(); ++it)
         std::cout << *it << std::endl;
-    assert(out == std::vector<std::string>({
+    bool success = out == std::vector<std::string>({
         "    0 ---",
         "  500 one",
         "  666 ---",
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
         " 9990 ---",
         "10003 two",
         "10656 ---"
-    }));
-    std::cout << "PASS" << std::endl;
-    return 0;
+    });
+    std::cout << (success ? "PASS" : "FAIL") << std::endl;
+    return success ? 0 : 1;
 }
