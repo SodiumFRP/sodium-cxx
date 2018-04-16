@@ -349,11 +349,11 @@ namespace sodium {
 #endif
         }
 
-        void transaction_::close() const
+        void transaction_::close()
         {
             impl::transaction_impl* impl__(this->impl_);
             if (impl__) {
-                const_cast<transaction_*>(this)->impl_ = NULL;
+                this->impl_ = NULL;
                 partition* part = transaction_impl::part;
                 if (part->depth == 1) {
                     try {
