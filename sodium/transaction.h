@@ -219,7 +219,7 @@ namespace sodium {
             ~transaction_();
             impl::transaction_impl* impl() const { return impl_; }
         protected:
-            void close();
+            void close() const;
             static transaction_impl* current_transaction();
         };
     };
@@ -237,7 +237,7 @@ namespace sodium {
              * The destructor will close the transaction, so normally close() isn't needed.
              * But, in some cases you might want to close it earlier, and close() will do this for you.
              */
-            inline void close() { impl::transaction_::close(); }
+            inline void close() const { impl::transaction_::close(); }
 
             void prioritized(SODIUM_SHARED_PTR<impl::node> target,
                              std::function<void(impl::transaction_impl*)> action)
