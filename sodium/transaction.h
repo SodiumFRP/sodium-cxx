@@ -24,8 +24,6 @@
 
 namespace sodium {
 
-    class transaction_impl;
-
     struct partition {
         partition();
         ~partition();

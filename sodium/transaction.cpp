@@ -302,11 +302,11 @@ namespace sodium {
         }
 
         transaction_::transaction_()
-            : impl_(current_transaction())
         {
+            if (transaction_impl::part == nullptr)
+                transaction_impl::part = new partition;
+            impl_ = current_transaction();
             if (impl_ == NULL) {
-                if (transaction_impl::part == nullptr)
-                    transaction_impl::part = new partition;
 #if !defined(SODIUM_SINGLE_THREADED)
                 transaction_impl::part->mx.lock();
 #endif
