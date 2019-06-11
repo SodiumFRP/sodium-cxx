@@ -778,8 +778,7 @@ namespace sodium {
          * handler. An exception will be thrown, because you are not meant to
          * use this to create your own primitives.
          */
-        std::function<void()> listen(
-            const std::function<void(const A&)>& handle) const {
+        std::function<void()> listen(std::function<void(const A&)> handle) const {
             transaction trans;
             auto kill = stream<A>(value_(trans.impl()))
                             .coalesce([](const A&, const A& b) { return b; })
@@ -885,7 +884,7 @@ namespace sodium {
          * High-level interface to obtain an stream's value.
          */
         std::function<void()> listen(
-            const std::function<void(const A&)>& handle) const {
+            std::function<void(const A&)> handle) const {
             transaction trans1;
             std::function<void()>* pKill = listen_raw(
                 trans1.impl(),

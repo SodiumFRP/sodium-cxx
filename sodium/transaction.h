@@ -199,8 +199,15 @@ namespace sodium {
             bool to_regen;
             int inCallback;
 
-            void prioritized(SODIUM_SHARED_PTR<impl::node> target,
-                             std::function<void(impl::transaction_impl*)> action);
+            void prioritized(SODIUM_SHARED_PTR<node> target,
+                             std::function<void(transaction_impl*)> f)
+            {
+                entryID id = next_entry_id;
+                next_entry_id = next_entry_id.succ();
+                prioritizedQ.insert(std::pair<rank_t, entryID>(rankOf(target), id));
+                entries.insert(std::pair<entryID, prioritized_entry>(id,
+                    prioritized_entry(std::move(target), std::move(f))));
+            }
             void last(const std::function<void()>& action);
 
             void check_regen();

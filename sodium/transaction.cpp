@@ -276,7 +276,7 @@ namespace sodium {
                 if (pit == prioritizedQ.end()) break;
                 std::map<entryID, prioritized_entry>::iterator eit = entries.find(pit->second);
                 assert(eit != entries.end());
-                std::function<void(transaction_impl*)> action = eit->second.action;
+                std::function<void(transaction_impl*)> action = std::move(eit->second.action);
                 prioritizedQ.erase(pit);
                 entries.erase(eit);
                 action(this);
@@ -285,15 +285,6 @@ namespace sodium {
                 (*lastQ.begin())();
                 lastQ.erase(lastQ.begin());
             }
-        }
-
-        void transaction_impl::prioritized(SODIUM_SHARED_PTR<node> target,
-                                           std::function<void(transaction_impl*)> f)
-        {
-            entryID id = next_entry_id;
-            next_entry_id = next_entry_id.succ();
-            entries.insert(pair<entryID, prioritized_entry>(id, prioritized_entry(target, std::move(f))));
-            prioritizedQ.insert(pair<rank_t, entryID>(rankOf(target), id));
         }
 
         void transaction_impl::last(const std::function<void()>& action)
