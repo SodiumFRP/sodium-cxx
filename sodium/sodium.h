@@ -336,7 +336,7 @@ namespace sodium {
                     return [f, a](const B& b) -> C { return f(a, b); };
                 });
             transaction trans;
-            auto ca = apply<B, C>(map(fa), bb);
+            auto ca = sodium::apply<B, C>(map(fa), bb);
             trans.close();
             return ca;
         }
@@ -357,7 +357,7 @@ namespace sodium {
                             [f, a, b](const C& c) -> D { return f(a, b, c); };
                     };
                 });
-            return apply(apply(map(fa), bb), bc);
+            return sodium::apply(sodium::apply(map(fa), bb), bc);
         }
 
         /*!
@@ -384,7 +384,7 @@ namespace sodium {
                         };
                     };
                 });
-            return apply(apply(apply(map(fa), bb), bc), bd);
+            return sodium::apply(sodium::apply(sodium::apply(map(fa), bb), bc), bd);
         }
 
         /*!
@@ -418,7 +418,8 @@ namespace sodium {
                         };
                     };
                 });
-            return apply(apply(apply(apply(map(fa), bb), bc), bd), be);
+            return sodium::apply(sodium::apply(sodium::apply(sodium::apply(map(fa), bb), bc), bd),
+                                 be);
         }
 
         /*!
@@ -460,8 +461,9 @@ namespace sodium {
                         };
                     };
                 });
-            return apply(apply(apply(apply(apply(map(fa), bb), bc), bd), be),
-                         bf);
+            return sodium::apply(
+                sodium::apply(sodium::apply(sodium::apply(sodium::apply(map(fa), bb), bc), bd), be),
+                bf);
         }
 
         /*!
@@ -514,9 +516,9 @@ namespace sodium {
                         };
                     };
                 });
-            return apply(
-                apply(apply(apply(apply(apply(map(fa), bb), bc), bd), be), bf),
-                bg);
+            return sodium::apply(
+                sodium::apply(sodium::apply(sodium::apply(sodium::apply(sodium::apply(map(fa), bb),
+                bc), bd), be), bf), bg);
         }
 
         /*!
@@ -1420,7 +1422,7 @@ namespace sodium {
                 return [f, a](const B& b) -> C { return f(a, b); };
             });
         transaction trans;
-        cell<C> cc = apply<B, C>(ba.map(fa), bb);
+        cell<C> cc = sodium::apply<B, C>(ba.map(fa), bb);
         trans.close();
         return cc;
     }
@@ -1444,7 +1446,7 @@ namespace sodium {
                     return [f, a, b](const C& c) -> D { return f(a, b, c); };
                 };
             });
-        return apply(apply(ba.map(fa), bb), bc);
+        return sodium::apply(sodium::apply(ba.map(fa), bb), bc);
     }
 
     template <typename A, typename B, typename C, typename D, typename E>
@@ -1477,7 +1479,7 @@ namespace sodium {
                         };
                     };
             });
-        return apply(apply(apply(ba.map(fa), bb), bc), bd);
+        return sodium::apply(sodium::apply(sodium::apply(ba.map(fa), bb), bc), bd);
     }
 
     template <typename A, typename B, typename C, typename D, typename E,
@@ -1519,7 +1521,8 @@ namespace sodium {
                         };
                     };
             });
-        return apply(apply(apply(apply(ba.map(fa), bb), bc), bd), be);
+        return sodium::apply(sodium::apply(sodium::apply(sodium::apply(ba.map(fa), bb), bc), bd),
+                             be);
     }
 
     template <typename A, typename B, typename C, typename D, typename E,
@@ -1568,8 +1571,8 @@ namespace sodium {
                     };
                 };
             });
-        return apply(apply(apply(apply(apply(ba.map(fa), bb), bc), bd), be),
-                     bf);
+        return sodium::apply(sodium::apply(sodium::apply(sodium::apply(sodium::apply(ba.map(fa), bb),
+            bc), bd), be), bf);
     }
 
     template <typename A, typename B, typename C, typename D, typename E,
@@ -1624,9 +1627,9 @@ namespace sodium {
                     };
                 };
             });
-        return apply(
-            apply(apply(apply(apply(apply(ba.map(fa), bb), bc), bd), be), bf),
-            bg);
+        return sodium::apply(
+            sodium::apply(sodium::apply(sodium::apply(sodium::apply(sodium::apply(ba.map(fa), bb),
+            bc), bd), be), bf), bg);
     }
 
     /*!
